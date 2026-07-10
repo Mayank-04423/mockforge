@@ -4,10 +4,35 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../lib/generated/prisma"
+  provider = "prisma-client-js"
+  // Look! We can completely delete the custom output line so it goes back to the default node_modules!
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL") // Stable Prisma supports this perfectly!
+}
+
+// Keep your Project and Endpoint models underneath exactly as they are...
+model Project {
+  id          String     @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  endpoints   Endpoint[] // One project can house multiple mock API endpoints
+}
+
+model Endpoint {
+  id           String   @id @default(uuid())
+  path         String   // e.g., "/api/users" or "/v1/products"
+  method       String   // GET, POST, PUT, DELETE
+  responseBody String   // The raw JSON data string returned when hit
+  statusCode   Int      @default(200)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  // The foreign key connector linking this endpoint to its parent project
+  projectId    String
+  project      Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
