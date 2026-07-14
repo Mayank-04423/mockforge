@@ -212,3 +212,112 @@ The Problem: "I needed to build an API mock server engine capable of dynamically
 The Solution: "I built a customized full-stack runtime proxy engine using Next.js App Router dynamic path catch-alls ([[...slug]]) and a Prisma backend linked to PostgreSQL. I designed a tokenization routing algorithm that splits incoming request strings and database blueprints into semantic segment chunks. The engine performs an initial structural length short-circuit check to protect database performance, loops token-by-token to parse out dynamic colon variable prefixes, and passes the extracted parameters down to the response via metadata response headers (X-Mockforge-Params)."
 
 The Result: "The engine achieves dynamic routing parsing execution latency of under 40 milliseconds locally on my Linux workstation, providing clean, immutable state panel updates on the frontend dashboard using React functional arrays."
+
+## 📈 Executive Session Summary
+Tonight's development velocity shifted MockForge from disconnected interface mockups into a fully reactive, full-stack application. We successfully integrated a premium, responsive navigation shell, implemented client-side state hooks for handling micro-interactions, configured database schemas using Prisma migrations, and connected the client layout canvas directly to a PostgreSQL execution layer using Next.js App Router Server Actions.
+
+## 🛠️  Granular Component Matrix
+### 1. Frontend Layout & Shell Core (app/dashboard/layout.tsx)
+Aesthetic Integration: Implemented your exact signature color profile palette markers (#F7F7F5 main body background texture, #EFEFEF structural panel borders, and #2D3142 dark primary slate text elements).
+
+Iconography Engine: Stripped raw emoji placeholders and integrated standard high-contrast SVG components utilizing lucide-react (LayoutDashboard, Radio, Terminal, X, Loader2).
+
+Dynamic Viewport Canvas: Configured the global {children} layout wrappers inside an independent <main> section using Tailwind utility tokens (flex-1, overflow-y-auto, max-w-7xl) to ensure zero layout-shift drops during sub-route rendering.
+
+Responsive Bounds: Maintained the responsive layout architecture (hidden md:flex) to allow seamless navigation collapsing on varying viewport breakpoints.
+
+### 2. The "New Mock" Slide-over Panel (components/NewMockModal.tsx)
+State Architecture: Deployed localized React state arrays (useState) to capture multi-variable form states tracking:
+
+method (HTTP Verb state toggles: GET, POST, PUT, DELETE, PATCH)
+
+path (Target interceptor path strings, automatic base URL prefix fallback formatting)
+
+statusCode (Numeric mapping values matching native network states like 200, 201, 404, 500)
+
+delay (Latent connection simulation intervals from 0ms up to 2000ms)
+
+Micro-Animations & Overlays: Injected an animated backdrop component layer (bg-neutral-900/40 backdrop-blur-sm) linked to absolute modal close event boundaries, alongside an ease-in right panel slide animation (animate-in slide-in-from-right duration-200).
+
+Asynchronous UX Signals: Configured loading states (isSaving) paired with a conditional rendering loop displaying an operational spinner (Loader2) to prevent duplicate form execution during transit.
+
+### 3. Server Actions & PostgreSQL Ingestion Engine (app/dashboard/action.ts)
+Boundary Crossing: Established a clean, decoupled asynchronous entry point using the Next.js 'use server' directive, eliminating the need for boilerplate fetch API handlers on the client side.
+
+Data Validation & Normalization: Sanitized input parameters by standardizing path strings to verify forward-slash configurations (/).
+
+Prisma Client Pipeline: Integrated a direct transaction sequence mapping form components straight to database objects inside db.endpoint.create.
+
+Cache Revalidation: Hooked up Next.js revalidatePath('/dashboard') to trigger server-driven component updates, ensuring live dashboard records match database realities automatically.
+
+### 4. Database Schema Upgrades (prisma/schema.prisma)
+Relational Database Structural Update: Resolved code-duplication errors inside the Prisma definition maps. Merged independent model properties directly into the foundational Endpoint object framework.
+
+Field Additions: Added the explicit network injection value delay Int @default(0) into the live migration schemas.
+
+Relational Integrity Alignment: Executed structural migrations (npx prisma migrate dev --name add_delay_to_endpoints) to keep local PostgreSQL tables in sync with updated client data objects.
+
+Workaround Integration: Registered a default relational foreign key entity (default-project-id) within the Project target columns to satisfy database constraints during runtime testing.
+
+Architectural Component,      Status,                  Verification Layer
+Tailwind Visual Layout,   🟢 100% Operational,   Responsive grid offsets checking out flawlessly.
+Lucide Icon Engine        ,🟢 100% Operational,   Bundles compiled; missing dependency resolved via npm.
+Modal Context Toggle,      🟢 100% Operational,   State name mappings adjusted from setIsOpen to setIsModalOpen.
+TypeScript Type Checks,    🟢 100% Operational,   node_modules schema cache successfully invalidated via prisma update.
+Server Action Transit,     🟢 100% Operational,   Removed invalid client strings; strict boundary rules validated.
+PostgreSQL Write Path,     🟢 100% Operational,   Relations connected via initial Prisma record insertion.
+
+## 🎯 MockForge Technical Interview Prep Bank
+Core Focus: Next.js Server Actions, Full-Stack Architecture, and Database Integrations
+
+### 🧠 1. Core Next.js Architecture & Boundary Isolation
+Question: In the Next.js App Router framework, what happens if you combine the 'use client' and 'use server' directives in the exact same code file? What are the core architectural rules separating them?
+
+Ideal Technical Answer:
+
+Next.js enforces strict boundary separation between the client and server runtimes. Combining both directives in a single file results in a compilation error during the static analysis phase (such as a Turbopack/Webpack compilation error).
+
+The 'use client' directive marks a file as part of the Client Component tree, allowing it to use browser APIs, hooks (useState, useEffect), and interactive listeners. Conversely, the 'use server' directive is explicitly reserved for marking backend, server-only execution entry points, primarily Server Actions.
+
+To integrate them safely, Server Actions must be written in separate files marked with 'use server' at the absolute top, which are then imported and called asynchronously inside Client Components as standard JavaScript functions across the network boundary.
+
+### 🗄️ 2. Type Systems & Cache Synchronization (Prisma)
+Question: When modifying a relational database schema using Prisma, you executed a migration (prisma migrate dev), but your TypeScript compilation layer still threw errors claiming the new table column did not exist. Why does this happen, and how do you resolve it?
+
+Ideal Technical Answer:
+
+Running prisma migrate dev synchronizes the physical database tables (like PostgreSQL), but the TypeScript compiler relies on local definitions generated inside node_modules/.prisma/client. If the text editor or compiler is caching older typings, a phantom type mismatch error occurs.
+
+The resolution requires explicit synchronization layers:
+
+Force a manual regeneration of the local type declarations by running npx prisma generate, which rewrites the TypeScript definitions to match the new schema exactly.
+
+If the text editor still flags a red error line due to file-system caching, you must force-restart the language service (e.g., executing the "TypeScript: Restart TS Server" command in VS Code) to pull the new definition maps.
+
+### 🛡️ 3. Relational Integrity & Constraint Handling
+Question: When executing a database write command via an ORM, your backend code throws a generic database exception, rolling back the transaction. Upon closer inspection, it identifies a "Foreign Key Constraint Violation". What does this error mean, and how do you debug it?
+
+Ideal Technical Answer:
+
+A Foreign Key Constraint Violation means the database engine rejected an insertion or update statement because a specified relational key does not point to a valid, existing row in the parent table.
+
+For example, if an Endpoint model contains a mandatory projectId field, the database requires that the provided string value match a pre-existing record's primary key inside the Project table. If it does not match, the database rolls back the transaction to preserve strict data integrity.
+
+To debug and resolve this, you must either:
+
+Ensure the parent entity is created prior to inserting the child record.
+
+Seed/provide a baseline placeholder row in the parent table to satisfy the key check during isolated micro-feature testing.
+
+Mark the relation as optional in the schema definition if the business logic allows the child record to exist independently.
+
+### ⚡ 4. Asynchronous State Optimization
+Question: Why is it critical to explicitly track an isSaving or isLoading boolean state during a form submission that calls an asynchronous Server Action? What are the UX and data-integrity implications?
+
+Ideal Technical Answer:
+
+Tracking the asynchronous mutation state serves two major purposes:
+
+Preventing Race Conditions and Duplicate Writes: Without disabling the submit button during an active network request, a user can repeatedly trigger click events. This forces the application to execute concurrent backend operations, leading to duplicate records in the database or data corruption.
+
+Optimizing UX (User Experience): By tracking the status, we can change the text UI to an active spinner (e.g., changing text to "Saving Route..." via lucide-react animations), signaling to the user that processing is happening in the background, which stops them from leaving the context before the transaction completes.

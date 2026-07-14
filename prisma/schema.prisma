@@ -29,10 +29,12 @@ model Endpoint {
   method       String   // GET, POST, PUT, DELETE
   responseBody String   // The raw JSON data string returned when hit
   statusCode   Int      @default(200)
+  delay        Int      @default(0) // ⚡ Added cleanly right here!
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  
+
   // The foreign key connector linking this endpoint to its parent project
   projectId    String
   project      Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
+

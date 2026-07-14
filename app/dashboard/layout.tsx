@@ -1,10 +1,17 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
+import { LayoutDashboard, Radio, Terminal } from 'lucide-react';
+// Import your fresh slide-over layout pane
+import NewMockModal from './components/newMockModal';
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     // 🎨 MAIN BACKGROUND: #F7F7F5 & PRIMARY TEXT: #2D3142
     <div className="flex h-screen w-screen bg-[#F7F7F5] text-[#2D3142] overflow-hidden font-sans">
@@ -19,13 +26,18 @@ export default function DashboardLayout({
           
           <nav className="space-y-1">
             <a href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/80 text-[#2D3142] font-semibold text-sm shadow-sm transition-all">
-              <span>📊</span> Dashboard
+              <LayoutDashboard size={16} className="text-[#9BB1C4]" />
+              <span>Dashboard</span>
             </a>
+            
             <a href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg text-[#767B91] hover:bg-white/40 hover:text-[#2D3142] text-sm font-medium transition-all">
-              <span>🔌</span> API Endpoints
+              <Radio size={16} className="text-[#767B91]" />
+              <span>API Endpoints</span>
             </a>
+            
             <a href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg text-[#767B91] hover:bg-white/40 hover:text-[#2D3142] text-sm font-medium transition-all">
-              <span>📜</span> Activity Logs
+              <Terminal size={16} className="text-[#767B91]" />
+              <span>Activity Logs</span>
             </a>
           </nav>
         </div>
@@ -45,8 +57,11 @@ export default function DashboardLayout({
       <main className="flex-1 flex flex-col overflow-y-auto">
         <header className="h-14 border-b border-neutral-200/40 flex items-center justify-between px-8 bg-white/40 backdrop-blur-md sticky top-0 z-10">
           <h1 className="text-xs font-bold tracking-widest text-[#767B91] uppercase">Workspace Dashboard</h1>
-          {/* Accent Button: #9B729F */}
-          <button className="px-3 py-1.5 bg-[#9B729F] hover:opacity-90 text-white font-semibold rounded-lg text-xs transition-all shadow-sm">
+          {/* Accent Button hooked up to open state */}
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="px-3 py-1.5 bg-[#9B729F] hover:opacity-90 text-white font-semibold rounded-lg text-xs transition-all shadow-sm"
+          >
             + New Mock
           </button>
         </header>
@@ -55,6 +70,9 @@ export default function DashboardLayout({
           {children}
         </div>
       </main>
+
+      {/* Slide-over component rendered globally within the layout context */}
+      <NewMockModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 }
